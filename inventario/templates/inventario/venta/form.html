@@ -1,0 +1,175 @@
+{% extends 'inventario/base.html' %}
+
+{% block title %}Nueva Venta{% endblock %}
+
+{% block header_title %}Nueva Venta{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header con breadcrumb -->
+    <div class="mb-8">
+        <p class="text-gray-500 text-sm">Panel de Control / Ventas / Nueva</p>
+        <h2 class="text-2xl font-bold gradient-text">Registrar Nueva Venta</h2>
+    </div>
+
+    <!-- Formulario con diseño moderno -->
+    <div class="glass-card rounded-2xl p-8 neo-shadow">
+        <form method="post" class="space-y-8" x-data="{ 
+            sending: false,
+            producto: null,
+            cantidad: 1,
+            precio: 0,
+            subtotal: 0,
+            calcularSubtotal() {
+                this.subtotal = (this.precio * this.cantidad).toFixed(2);
+            }
+        }" @submit="sending = true">
+            {% csrf_token %}
+            
+            <!-- Información de la Venta -->
+            <div class="space-y-6">
+                <h3 class="text-lg font-semibold text-gray-900">Información de la Venta</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for field in venta_form %}
+                    <div class="space-y-2 relative group">
+                        <label for="{{ field.id_for_label }}" 
+                               class="block text-sm font-medium text-gray-700 transition-colors group-focus-within:text-emerald-600">
+                            {{ field.label }}
+                        </label>
+                        <div class="relative">
+                            {% if field.errors %}
+                            <div class="text-red-600 text-sm mb-2">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                            <div class="mt-1 relative rounded-xl shadow-sm">
+                                {{ field }}
+                                <div class="absolute inset-0 rounded-xl transition-colors pointer-events-none
+                                          group-focus-within:ring-2 group-focus-within:ring-emerald-600"></div>
+                            </div>
+                            {% if field.help_text %}
+                            <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Detalles del Producto -->
+            <div class="space-y-6 pt-6 border-t border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-900">Detalles del Producto</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for field in detalle_form %}
+                    <div class="space-y-2 relative group {% if field.name == 'producto' %}md:col-span-2{% endif %}">
+                        <label for="{{ field.id_for_label }}" 
+                               class="block text-sm font-medium text-gray-700 transition-colors group-focus-within:text-emerald-600">
+                            {{ field.label }}
+                        </label>
+                        <div class="relative">
+                            {% if field.errors %}
+                            <div class="text-red-600 text-sm mb-2">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                            <div class="mt-1 relative rounded-xl shadow-sm">
+                                {{ field }}
+                                <div class="absolute inset-0 rounded-xl transition-colors pointer-events-none
+                                          group-focus-within:ring-2 group-focus-within:ring-emerald-600"></div>
+                            </div>
+                            {% if field.help_text %}
+                            <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Resumen de la Venta -->
+                <div class="bg-gray-50 rounded-xl p-4 mt-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-sm text-gray-500">Subtotal:</div>
+                        <div class="text-sm font-medium text-gray-900" x-text="`$${subtotal}`">$0.00</div>
+                        <div class="text-sm text-gray-500">Descuento:</div>
+                        <div class="text-sm font-medium text-gray-900">${{ venta_form.descuento.value|default:'0.00' }}</div>
+                        <div class="text-sm text-gray-500">Impuesto:</div>
+                        <div class="text-sm font-medium text-gray-900">${{ venta_form.impuesto.value|default:'0.00' }}</div>
+                        <div class="text-base font-semibold text-gray-900">Total:</div>
+                        <div class="text-base font-semibold text-emerald-600" x-text="`$${(parseFloat(subtotal) - {{ venta_form.descuento.value|default:0 }} + {{ venta_form.impuesto.value|default:0 }}).toFixed(2)}`">$0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-100">
+                <a href="{% url 'inventario:lista_ventas' %}" 
+                   class="inline-flex items-center px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 
+                          hover:bg-gray-50 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
+                    </svg>
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="group relative inline-flex items-center px-6 py-2 rounded-xl
+                               bg-gradient-to-r from-emerald-600 to-teal-600 text-white
+                               hover:from-emerald-700 hover:to-teal-700 
+                               transition-all duration-200 transform hover:-translate-y-px
+                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                        :class="{ 'opacity-75 cursor-wait': sending }">
+                    <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/50 to-white/0 
+                                transform -translate-x-full group-hover:animate-shine"></span>
+                    <svg class="w-5 h-5 mr-2" 
+                         :class="{ 'animate-spin': sending }"
+                         fill="none" 
+                         stroke="currentColor" 
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span x-text="sending ? 'Procesando...' : 'Registrar Venta'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input, select, textarea {
+        @apply w-full px-4 py-3 rounded-xl border-gray-300 bg-white/80 backdrop-blur-sm
+               focus:border-emerald-500 focus:ring-emerald-500 transition-colors duration-200;
+    }
+    
+    .errorlist {
+        @apply text-red-600 text-sm mt-1;
+    }
+    
+    @keyframes shine {
+        100% { transform: translateX(100%); }
+    }
+    
+    .group:hover .animate-shine {
+        animation: shine 0.85s ease-in-out;
+    }
+</style>
+
+<script>
+    // Calcular subtotal cuando cambia el producto o la cantidad
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('ventaForm', () => ({
+            init() {
+                this.$watch('producto', value => this.actualizarPrecio());
+                this.$watch('cantidad', value => this.calcularSubtotal());
+            },
+            actualizarPrecio() {
+                if (this.producto) {
+                    // Aquí podrías hacer una llamada AJAX para obtener el precio del producto
+                    // Por ahora usaremos un valor estático
+                    this.precio = 10.00;
+                    this.calcularSubtotal();
+                }
+            }
+        }));
+    });
+</script>
+{% endblock %}

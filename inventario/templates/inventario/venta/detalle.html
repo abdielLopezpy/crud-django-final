@@ -1,0 +1,79 @@
+{% extends 'inventario/base.html' %}
+
+{% block title %}Detalle de Venta{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold text-gray-900">Venta #{{ venta.id }}</h3>
+            <span class="px-3 py-1 text-sm font-semibold rounded-full 
+                {% if venta.metodo_pago == 'EFECTIVO' %}bg-green-100 text-green-800
+                {% elif venta.metodo_pago == 'TARJETA' %}bg-blue-100 text-blue-800
+                {% else %}bg-purple-100 text-purple-800{% endif %}">
+                {{ venta.get_metodo_pago_display }}
+            </span>
+        </div>
+        <p class="mt-2 text-sm text-gray-600">Fecha: {{ venta.fecha_venta|date:"d/m/Y H:i" }}</p>
+    </div>
+
+    <div class="px-6 py-4">
+        <h4 class="text-lg font-semibold mb-4">Productos Vendidos</h4>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Producto</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Cantidad</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Precio Unit.</th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for detalle in detalles %}
+                    <tr>
+                        <td class="px-4 py-3">{{ detalle.producto.nombre }}</td>
+                        <td class="px-4 py-3 text-right">{{ detalle.cantidad }}</td>
+                        <td class="px-4 py-3 text-right">${{ detalle.precio_unitario }}</td>
+                        <td class="px-4 py-3 text-right font-medium">${{ detalle.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 border-t border-gray-200 pt-4">
+            <dl class="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
+                <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Subtotal</dt>
+                    <dd class="mt-1 text-lg font-semibold text-gray-900">${{ venta.total|add:venta.descuento|sub:venta.impuesto }}</dd>
+                </div>
+                <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Descuento</dt>
+                    <dd class="mt-1 text-lg font-semibold text-red-600">-${{ venta.descuento }}</dd>
+                </div>
+                <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Impuesto</dt>
+                    <dd class="mt-1 text-lg font-semibold text-gray-900">${{ venta.impuesto }}</dd>
+                </div>
+                <div class="sm:col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Total</dt>
+                    <dd class="mt-1 text-xl font-bold text-blue-600">${{ venta.total }}</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+
+    <div class="px-6 py-4 bg-gray-50 flex justify-between items-center">
+        <a href="{% url 'inventario:lista_ventas' %}" class="text-gray-600 hover:text-gray-900">← Volver a la lista</a>
+        <div class="flex space-x-3">
+            <button onclick="window.print()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                Imprimir
+            </button>
+            <a href="{% url 'inventario:eliminar_venta' venta.pk %}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                Eliminar Venta
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

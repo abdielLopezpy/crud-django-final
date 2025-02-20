@@ -1,0 +1,195 @@
+{% extends 'inventario/base.html' %}
+
+{% block title %}Reportes y Análisis{% endblock %}
+
+{% block header_title %}Reportes y Análisis{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header con breadcrumb -->
+    <div>
+        <p class="text-gray-500 text-sm">Panel de Control / Reportes</p>
+        <h2 class="text-2xl font-bold gradient-text">Panel de Reportes</h2>
+        <p class="text-sm text-gray-600 mt-2">Visualiza y analiza los datos de tu negocio</p>
+    </div>
+
+    <!-- Tarjetas de Reportes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Ventas por Período -->
+        <div class="glass-card rounded-2xl p-6 neo-shadow hover:transform hover:scale-105 transition-all duration-300">
+            <div class="relative">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl transform rotate-12 opacity-20"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                            <svg class="h-8 w-8 text-white transform -rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Ventas por Período</h3>
+                    <p class="text-gray-600 mb-4">Analiza las ventas en un rango de fechas específico</p>
+                    <a href="{% url 'inventario:ventas_por_periodo' %}" 
+                       class="group inline-flex items-center text-blue-600 hover:text-blue-800">
+                        <span class="relative">
+                            Ver reporte
+                            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        </span>
+                        <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-2 transition-transform duration-300" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos Bajo Stock -->
+        <div class="glass-card rounded-2xl p-6 neo-shadow hover:transform hover:scale-105 transition-all duration-300">
+            <div class="relative">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl transform rotate-12 opacity-20"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg">
+                            <svg class="h-8 w-8 text-white transform -rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Productos Bajo Stock</h3>
+                    <p class="text-gray-600 mb-4">Lista de productos que necesitan reabastecimiento</p>
+                    <a href="{% url 'inventario:productos_bajo_stock' %}" 
+                       class="group inline-flex items-center text-red-600 hover:text-red-800">
+                        <span class="relative">
+                            Ver reporte
+                            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        </span>
+                        <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-2 transition-transform duration-300" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ventas por Categoría -->
+        <div class="glass-card rounded-2xl p-6 neo-shadow hover:transform hover:scale-105 transition-all duration-300">
+            <div class="relative">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl transform rotate-12 opacity-20"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-lg">
+                            <svg class="h-8 w-8 text-white transform -rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Ventas por Categoría</h3>
+                    <p class="text-gray-600 mb-4">Análisis de ventas agrupadas por categoría</p>
+                    <a href="{% url 'inventario:ventas_por_categoria' %}" 
+                       class="group inline-flex items-center text-emerald-600 hover:text-emerald-800">
+                        <span class="relative">
+                            Ver reporte
+                            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        </span>
+                        <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-2 transition-transform duration-300" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mejores Productos -->
+        <div class="glass-card rounded-2xl p-6 neo-shadow hover:transform hover:scale-105 transition-all duration-300">
+            <div class="relative">
+                <div class="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl transform rotate-12 opacity-20"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                            <svg class="h-8 w-8 text-white transform -rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Mejores Productos</h3>
+                    <p class="text-gray-600 mb-4">Top productos más vendidos y rentables</p>
+                    <a href="{% url 'inventario:mejores_productos' %}" 
+                       class="group inline-flex items-center text-purple-600 hover:text-purple-800">
+                        <span class="relative">
+                            Ver reporte
+                            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        </span>
+                        <svg class="ml-2 h-4 w-4 transform group-hover:translate-x-2 transition-transform duration-300" 
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if chart_data %}
+    <!-- Gráfico de Datos -->
+    <div class="glass-card rounded-2xl p-6 neo-shadow mt-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Resumen de Ventas</h3>
+        <canvas id="ventasChart" class="w-full h-64"></canvas>
+    </div>
+    {% endif %}
+</div>
+
+{% if chart_data %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('ventasChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {{ chart_data|safe }},
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endif %}
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px) saturate(180%);
+    }
+    
+    .neo-shadow {
+        box-shadow: 
+            8px 8px 16px rgba(0, 0, 0, 0.03),
+            -8px -8px 16px rgba(255, 255, 255, 0.7);
+    }
+</style>
+{% endblock %}

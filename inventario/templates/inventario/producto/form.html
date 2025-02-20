@@ -1,0 +1,100 @@
+{% extends 'inventario/base.html' %}
+
+{% block title %}{{ accion }} Producto{% endblock %}
+
+{% block header_title %}{{ accion }} Producto{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header con breadcrumb -->
+    <div class="mb-8">
+        <p class="text-gray-500 text-sm">Panel de Control / Productos / {{ accion }}</p>
+        <h2 class="text-2xl font-bold gradient-text">{{ accion }} Producto</h2>
+    </div>
+
+    <!-- Formulario con diseño moderno -->
+    <div class="glass-card rounded-2xl p-8 neo-shadow">
+        <form method="post" class="space-y-6" x-data="{ sending: false }" @submit="sending = true">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                <div class="space-y-2 relative group {% if field.name in 'descripcion,imagen' %}md:col-span-2{% endif %}">
+                    <label for="{{ field.id_for_label }}" 
+                           class="block text-sm font-medium text-gray-700 transition-colors group-focus-within:text-blue-600">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative">
+                        {% if field.errors %}
+                        <div class="text-red-600 text-sm mb-2">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+                        <div class="mt-1 relative rounded-xl shadow-sm">
+                            {{ field }}
+                            <div class="absolute inset-0 rounded-xl transition-colors pointer-events-none
+                                      group-focus-within:ring-2 group-focus-within:ring-blue-600"></div>
+                        </div>
+                        {% if field.help_text %}
+                        <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex items-center justify-end space-x-4 mt-8 pt-6 border-t border-gray-100">
+                <a href="{% url 'inventario:lista_productos' %}" 
+                   class="inline-flex items-center px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-700 
+                          hover:bg-gray-50 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                    </svg>
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="group relative inline-flex items-center px-6 py-2 rounded-xl
+                               bg-gradient-to-r from-blue-600 to-indigo-600 text-white
+                               hover:from-blue-700 hover:to-indigo-700 
+                               transition-all duration-200 transform hover:-translate-y-px
+                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        :class="{ 'opacity-75 cursor-wait': sending }">
+                    <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/50 to-white/0 
+                                transform -translate-x-full group-hover:animate-shine"></span>
+                    <svg class="w-5 h-5 mr-2 transform group-hover:scale-110 transition-transform" 
+                         :class="{ 'animate-spin': sending }"
+                         fill="none" 
+                         stroke="currentColor" 
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" 
+                              stroke-linejoin="round" 
+                              stroke-width="2" 
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span x-text="sending ? 'Guardando...' : 'Guardar Producto'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input, textarea, select {
+        @apply w-full px-4 py-3 rounded-xl border-gray-300 bg-white/80 backdrop-blur-sm
+               focus:border-blue-500 focus:ring-blue-500 transition-colors duration-200;
+    }
+    
+    .errorlist {
+        @apply text-red-600 text-sm mt-1;
+    }
+    
+    @keyframes shine {
+        100% { transform: translateX(100%); }
+    }
+    
+    .group:hover .animate-shine {
+        animation: shine 0.85s ease-in-out;
+    }
+</style>
+{% endblock %}

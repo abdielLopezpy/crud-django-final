@@ -1,0 +1,171 @@
+{% extends 'inventario/base.html' %}
+
+{% block title %}Ventas por Período{% endblock %}
+
+{% block header_title %}Análisis de Ventas{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div>
+        <p class="text-gray-500 text-sm">Panel de Control / Reportes / Ventas por Período</p>
+        <h2 class="text-2xl font-bold gradient-text">Análisis de Ventas por Período</h2>
+        <p class="text-sm text-gray-600 mt-2">Visualiza y analiza las ventas realizadas en un rango de fechas específico</p>
+    </div>
+
+    <!-- Formulario de Fechas -->
+    <div class="glass-card rounded-2xl p-6 neo-shadow">
+        <form method="post" class="space-y-6" x-data="{ sending: false }" @submit="sending = true">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for field in form %}
+                <div class="space-y-2">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative rounded-xl shadow-sm">
+                        {{ field }}
+                        {% if field.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="flex justify-end">
+                <button type="submit"
+                        class="group relative inline-flex items-center px-6 py-2 rounded-xl
+                               bg-gradient-to-r from-blue-600 to-indigo-600 text-white
+                               hover:from-blue-700 hover:to-indigo-700 
+                               transition-all duration-200 transform hover:-translate-y-px"
+                        :class="{ 'opacity-75 cursor-wait': sending }">
+                    <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/50 to-white/0 
+                                transform -translate-x-full group-hover:animate-shine"></span>
+                    <svg class="w-5 h-5 mr-2" :class="{ 'animate-spin': sending }"
+                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <span x-text="sending ? 'Generando...' : 'Generar Reporte'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if ventas %}
+    <!-- Resumen de Ventas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 bg-gradient-to-br from-green-400 to-green-600 rounded-xl shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Total Ventas</p>
+                    <p class="text-2xl font-bold text-gray-900">${{ ventas.total_ventas|floatformat:2 }}</p>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-sm">
+                <span class="text-gray-500">Período</span>
+                <span class="text-gray-900">{{ inicio|date:"d/m/Y" }} - {{ fin|date:"d/m/Y" }}</span>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Promedio por Venta</p>
+                    <p class="text-2xl font-bold text-gray-900">${{ ventas.promedio_venta|floatformat:2 }}</p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ ventas.promedio_percentage }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-600">Número de Ventas</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ ventas.num_ventas }}</p>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center justify-between text-sm">
+                <span class="text-gray-500">Ventas por día</span>
+                <span class="text-gray-900">{{ ventas.ventas_por_dia|floatformat:1 }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de Ventas -->
+    <div class="glass-card rounded-2xl p-6 neo-shadow">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tendencia de Ventas</h3>
+        <canvas id="ventasChart" class="w-full h-64"></canvas>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    input[type="date"] {
+        @apply w-full px-4 py-2 rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500;
+    }
+    
+    @keyframes shine {
+        100% { transform: translateX(100%); }
+    }
+    
+    .group:hover .animate-shine {
+        animation: shine 0.85s ease-in-out;
+    }
+</style>
+
+{% if ventas %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('ventasChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {{ chart_data|safe }},
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

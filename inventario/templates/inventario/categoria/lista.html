@@ -1,0 +1,120 @@
+{% extends 'inventario/base.html' %}
+
+{% block title %}Categorías{% endblock %}
+
+{% block header_title %}Gestión de Categorías{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header y Botón de Nueva Categoría -->
+    <div class="flex justify-between items-center">
+        <div>
+            <p class="text-gray-500 text-sm">Panel de Control / Categorías</p>
+            <h2 class="text-2xl font-bold gradient-text">Lista de Categorías</h2>
+        </div>
+        <a href="{% url 'inventario:nueva_categoria' %}" 
+           class="group relative overflow-hidden glass-card inline-flex items-center px-6 py-3 rounded-xl
+                  bg-gradient-to-r from-blue-600 to-indigo-600 text-white
+                  hover:from-blue-700 hover:to-indigo-700 
+                  transition-all duration-300 transform hover:-translate-y-1
+                  shadow-lg hover:shadow-2xl">
+            <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/50 to-white/0 
+                         transform -translate-x-full group-hover:animate-shine"></span>
+            <svg class="w-5 h-5 mr-2 transform group-hover:rotate-180 transition-transform duration-500" 
+                 fill="none" 
+                 stroke="currentColor" 
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      stroke-width="2" 
+                      d="M12 4v16m8-8H4"/>
+            </svg>
+            <span class="relative">Nueva Categoría</span>
+        </a>
+    </div>
+
+    <!-- Tabla de Categorías -->
+    <div class="glass-card rounded-2xl p-6 neo-shadow">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Nombre
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Descripción
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for categoria in categorias %}
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-blue-50">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ categoria.nombre }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-500 line-clamp-2">{{ categoria.descripcion|default:"Sin descripción" }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-2">
+                                <a href="{% url 'inventario:editar_categoria' categoria.pk %}" 
+                                   class="glass-card inline-flex items-center px-3 py-1 rounded-lg text-yellow-600 hover:text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors duration-200">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Editar
+                                </a>
+                                <a href="{% url 'inventario:eliminar_categoria' categoria.pk %}" 
+                                   class="glass-card inline-flex items-center px-3 py-1 rounded-lg text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 transition-colors duration-200">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="rounded-full bg-gray-100 p-3 mb-4">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                    </svg>
+                                </div>
+                                <span class="text-gray-500 text-sm">No hay categorías registradas.</span>
+                                <a href="{% url 'inventario:nueva_categoria' %}" class="mt-2 text-blue-600 hover:text-blue-800 text-sm">Crear nueva categoría →</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes shine {
+        100% { transform: translateX(100%); }
+    }
+    
+    .group:hover .animate-shine {
+        animation: shine 0.85s ease-in-out;
+    }
+</style>
+{% endblock %}
